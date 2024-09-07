@@ -6,13 +6,13 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Enrollment.DataModel.Migrations
 {
     /// <inheritdoc />
-    public partial class CreatedSuppliersTable : Migration
+    public partial class CreatedSuppliersINVTable : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Suppliers",
+                name: "SuppliersINV",
                 columns: table => new
                 {
                     SupplierID = table.Column<int>(type: "int", nullable: false)
@@ -26,7 +26,7 @@ namespace Enrollment.DataModel.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Suppliers", x => x.SupplierID);
+                    table.PrimaryKey("PK_SuppliersINV", x => x.SupplierID);
                 });
         }
 
@@ -34,7 +34,7 @@ namespace Enrollment.DataModel.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Suppliers");
+                name: "SuppliersINV");
         }
     }
 }

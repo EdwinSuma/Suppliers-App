@@ -58,7 +58,7 @@ namespace Enrollment.DataModel.Migrations
 
                     b.HasKey("SupplierID");
 
-                    b.ToTable("Suppliers");
+                    b.ToTable("SuppliersINV", (string)null);
                 });
 #pragma warning restore 612, 618
         }

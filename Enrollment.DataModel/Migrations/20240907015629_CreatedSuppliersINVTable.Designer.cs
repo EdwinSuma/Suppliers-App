@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Enrollment.DataModel.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240907013302_CreatedSuppliersTable")]
-    partial class CreatedSuppliersTable
+    [Migration("20240907015629_CreatedSuppliersINVTable")]
+    partial class CreatedSuppliersINVTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -61,7 +61,7 @@ namespace Enrollment.DataModel.Migrations
 
                     b.HasKey("SupplierID");
 
-                    b.ToTable("Suppliers");
+                    b.ToTable("SuppliersINV", (string)null);
                 });
 #pragma warning restore 612, 618
         }
