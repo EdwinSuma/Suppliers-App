@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Enrollment.DataModel.Migrations
+namespace Supplier.DataModel.Migrations
 {
     /// <inheritdoc />
-    public partial class CreatedSuppliersINVTable : Migration
+    public partial class renamedfiles : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
