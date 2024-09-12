@@ -13,7 +13,7 @@ namespace Supplier.DataModel
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer("Server=LAPTOP-RB1M56NU\\SQLEXPRESS;" +
-                "Database=Entprog_Enrollment;Integrated Security=SSPI;" +
+                "Database=SuppliersDb;Integrated Security=SSPI;" +
                 "TrustServerCertificate=true");
         }
 
