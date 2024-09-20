@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Enrollment.DataModel\Inventory.DataModel.csproj" />
+    <ProjectReference Include="..\Inventory.DataModel\Inventory.DataModel.csproj" />
   </ItemGroup>
 
 </Project>
