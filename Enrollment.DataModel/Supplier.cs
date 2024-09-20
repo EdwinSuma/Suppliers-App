@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Supplier.DataModel
+namespace Inventory.DataModel
 {
     public class Supplier
     {
@@ -25,9 +25,8 @@ namespace Supplier.DataModel
         [MaxLength(int.MaxValue)]
         public string ContactNo { get; set; }
 
-        [Required]
         public DateTime DateAdded { get; set; }
 
-        public DateTime? DateModified { get; set; } = DateTime.Now;
+        public DateTime? DateModified { get; set; }
     }
 }
