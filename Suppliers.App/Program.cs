@@ -1,5 +1,7 @@
 using Inventory.DataModel;
 using Microsoft.EntityFrameworkCore;
+using Suppliers.App.Configuration;
+using Suppliers.App.Models.Repositories;
 
 namespace Suppliers.App
 {
@@ -11,8 +13,12 @@ namespace Suppliers.App
 
             builder.Services.AddDbContext<AppDbContext>(opts =>
             {
-                opts.UseSqlServer(builder.Configuration.GetConnectionString("Personal"));
+                opts.UseSqlServer(builder.Configuration.GetConnectionString("Submission"));
             });
+
+            builder.Services.AddAutoMapper(typeof(MapperConfig));
+
+            builder.Services.AddScoped<IProductRepo, ProductRepo>();
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();

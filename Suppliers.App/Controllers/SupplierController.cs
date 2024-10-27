@@ -1,5 +1,7 @@
-﻿using Inventory.DataModel;
+﻿using AutoMapper;
+using Inventory.DataModel;
 using Microsoft.AspNetCore.Mvc;
+using Suppliers.App.Models;
 
 
 namespace Suppliers.App.Controllers
@@ -7,27 +9,31 @@ namespace Suppliers.App.Controllers
     public class SupplierController : Controller
     {
         private readonly AppDbContext context;
-        public SupplierController(AppDbContext context)
+        private readonly IMapper mapper;
+        public SupplierController(AppDbContext context, IMapper mapper)
         {
             this.context = context;
+            this.mapper = mapper;
         }
         public IActionResult Index()
         {
-            return View(context.Suppliers.OrderBy(o => o.CompanyName).ToList());
+            List<SupplierVM> list = mapper.Map<List<SupplierVM>>(context.Suppliers.ToList());
+            return View(list);
         }
 
         public IActionResult Add()
         {
-            return View(new Inventory.DataModel.Supplier());
+            return View(new SupplierVM());
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Add(Inventory.DataModel.Supplier supplier)
+        public async Task<IActionResult> Add(SupplierVM model)
         {
-            supplier.DateAdded = DateTime.Now;
+            model.DateAdded = DateTime.Now;
             //context.Add(supplier);
-            await context.Set<Inventory.DataModel.Supplier>().AddAsync(supplier);
+            Supplier entity = mapper.Map<Supplier>(model);
+            await context.AddAsync(entity);
             await context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
@@ -37,7 +43,7 @@ namespace Suppliers.App.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var supplier = await context.Suppliers.FindAsync(id);
-            context.Set<Inventory.DataModel.Supplier>().Remove(supplier);
+            context.Set<Supplier>().Remove(supplier);
             await context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
@@ -46,7 +52,7 @@ namespace Suppliers.App.Controllers
         {
             if (id == null) return RedirectToAction("Index");
 
-            var supplier = await context.Suppliers.FindAsync(id);
+            SupplierVM supplier = mapper.Map<SupplierVM>(await context.Suppliers.FindAsync(id));
 
             return View(supplier);
         }
@@ -54,7 +60,7 @@ namespace Suppliers.App.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
 
-        public async Task<IActionResult> Edit(Inventory.DataModel.Supplier supplier)
+        public async Task<IActionResult> Edit(SupplierVM supplier)
         {
             var existingSupplier = await context.Suppliers.FindAsync(supplier.SupplierID);
 
@@ -69,7 +75,7 @@ namespace Suppliers.App.Controllers
                 // Update DateModified but keep DateAdded intact
                 existingSupplier.DateModified = DateTime.Now;
 
-                context.Set<Inventory.DataModel.Supplier>().Update(existingSupplier);
+                context.Set<Supplier>().Update(mapper.Map<Supplier>(existingSupplier));
                 await context.SaveChangesAsync();
 
             }
