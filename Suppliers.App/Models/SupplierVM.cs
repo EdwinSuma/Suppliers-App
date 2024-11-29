@@ -7,6 +7,7 @@ namespace Suppliers.App.Models
         public int SupplierID { get; set; }
         [Required]
         [MaxLength(30)]
+        [Display(Name = "Company Name")]
         public string CompanyName { get; set; }
         [Required]
         [MaxLength(30)]
@@ -15,6 +16,7 @@ namespace Suppliers.App.Models
         [MaxLength(30)]
         public string Representative { get; set; }
         [Required]
+        [Display(Name = "Contact Number")]
         [MaxLength(30)]
         public string ContactNo { get; set; }
         public DateTime DateAdded { get; set; }

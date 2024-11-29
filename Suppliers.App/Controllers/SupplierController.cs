@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
 using Inventory.DataModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Suppliers.App.Models;
 
 
+
 namespace Suppliers.App.Controllers
 {
+    [Authorize]
     public class SupplierController : Controller
     {
         private readonly AppDbContext context;
@@ -30,12 +33,19 @@ namespace Suppliers.App.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Add(SupplierVM model)
         {
-            model.DateAdded = DateTime.Now;
-            //context.Add(supplier);
-            Supplier entity = mapper.Map<Supplier>(model);
-            await context.AddAsync(entity);
-            await context.SaveChangesAsync();
-            return RedirectToAction("Index");
+            if (ModelState.IsValid)
+            {
+                model.DateAdded = DateTime.Now;
+                //context.Add(supplier);
+                Supplier entity = mapper.Map<Supplier>(model);
+                await context.AddAsync(entity);
+                await context.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return View(model);
+            }
         }
 
         [HttpPost]
@@ -62,24 +72,31 @@ namespace Suppliers.App.Controllers
 
         public async Task<IActionResult> Edit(SupplierVM supplier)
         {
-            var existingSupplier = await context.Suppliers.FindAsync(supplier.SupplierID);
-
-            if (existingSupplier != null)
+            if (ModelState.IsValid)
             {
-                // Update only the modifiable fields, excluding DateAdded
-                existingSupplier.CompanyName = supplier.CompanyName;
-                existingSupplier.Address = supplier.Address;
-                existingSupplier.Representative = supplier.Representative;
-                existingSupplier.ContactNo = supplier.ContactNo;
+                var existingSupplier = await context.Suppliers.FindAsync(supplier.SupplierID);
 
-                // Update DateModified but keep DateAdded intact
-                existingSupplier.DateModified = DateTime.Now;
+                if (existingSupplier != null)
+                {
+                    // Update only the modifiable fields, excluding DateAdded
+                    existingSupplier.CompanyName = supplier.CompanyName;
+                    existingSupplier.Address = supplier.Address;
+                    existingSupplier.Representative = supplier.Representative;
+                    existingSupplier.ContactNo = supplier.ContactNo;
 
-                context.Set<Supplier>().Update(mapper.Map<Supplier>(existingSupplier));
-                await context.SaveChangesAsync();
+                    // Update DateModified but keep DateAdded intact
+                    existingSupplier.DateModified = DateTime.Now;
 
+                    context.Set<Supplier>().Update(mapper.Map<Supplier>(existingSupplier));
+                    await context.SaveChangesAsync();
+
+                }
+                return RedirectToAction("Index");
             }
-            return RedirectToAction("Index");
+            else
+            {
+                return RedirectToAction("Index");
+            }
         }
     }
 }

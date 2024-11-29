@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System.ComponentModel.DataAnnotations;
 
 namespace Suppliers.App.Models
@@ -14,17 +15,26 @@ namespace Suppliers.App.Models
         public string Name { get; set; }
 
         [Required]
-        [Display(Description = "Product Description")]
+        [Display(Name = "Product Description")]
         [MaxLength]
         public string Description { get; set; }
 
-        public int Qty { get; set; }
+        [Display(Name = "Quantity")]
+        [BindNever]
+        public int Qty { get; set; } = 0;
 
         [MaxLength]
+        [Display(Name = "Product Unit")]
         public string Unit { get; set; }
 
         public DateTime DateAdded { get; set; }
 
         public DateTime? DateModified { get; set; }
+
+        public ProductVM()
+        {
+            Qty = 0;
+        }
     }
+
 }

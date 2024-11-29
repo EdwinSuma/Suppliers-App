@@ -1,4 +1,5 @@
 using Inventory.DataModel;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Suppliers.App.Configuration;
 using Suppliers.App.Models.Repositories;
@@ -13,7 +14,27 @@ namespace Suppliers.App
 
             builder.Services.AddDbContext<AppDbContext>(opts =>
             {
-                opts.UseSqlServer(builder.Configuration.GetConnectionString("Submission"));
+                opts.UseSqlServer(builder.Configuration.GetConnectionString("Personal"));
+            });
+
+            // Add Identity services
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                options.Password.RequireDigit = false;
+                options.Password.RequiredLength = 3;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+
+                options.SignIn.RequireConfirmedEmail = false;
+            }).AddEntityFrameworkStores<AppDbContext>();
+
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Account/SignIn";
+                options.LogoutPath = "/Account/SignoUt";
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(10);
+                options.SlidingExpiration = true;
             });
 
             builder.Services.AddAutoMapper(typeof(MapperConfig));
@@ -38,6 +59,7 @@ namespace Suppliers.App
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(

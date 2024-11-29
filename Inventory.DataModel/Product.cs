@@ -30,5 +30,7 @@ namespace Inventory.DataModel
         public DateTime DateAdded { get; set; }
 
         public DateTime? DateModified { get; set; }
+
+        public List<PurchaseOrderDetail> PurchaseOrderDetails { get; set; }
     }
 }

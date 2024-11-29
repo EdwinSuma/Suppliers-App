@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 using Inventory.DataModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Suppliers.App.Models;
 using Suppliers.App.Models.Repositories;
 
 namespace Suppliers.App.Controllers
 {
+    [Authorize]
     public class ProductController : Controller
     {
         private readonly IProductRepo repo;
@@ -74,7 +76,6 @@ namespace Suppliers.App.Controllers
                 
                 existingProduct.Name = product.Name; 
                 existingProduct.Description = product.Description;
-                existingProduct.Qty = product.Qty;
                 existingProduct.Unit = product.Unit;
 
                 

@@ -3,19 +3,21 @@
 <h3>Edit Product</h3>
 
 <form asp-controller="Product" asp-action="Edit" method="post">
+    <div asp-validation-summary="All"></div>
+
     <input type="hidden" asp-for="ProductID" />
 
     <label asp-for="Name">Product Name</label>
     <input type="text" asp-for="Name" class="form-control" />
+    <span asp-validation-for="Name" class="text-danger"></span>
     <br />
     <label asp-for="Description">Description</label>
     <input type="text" asp-for="Description" class="form-control" />
-    <br />
-    <label asp-for="Qty">Quantity</label>
-    <input type="text" asp-for="Qty" class="form-control" />
+    <span asp-validation-for="Description" class="text-danger"></span>
     <br />
     <label asp-for="Unit">Unit</label>
     <input type="number" asp-for="Unit" class="form-control" />
+    <span asp-validation-for="Unit" class="text-danger"></span>
     <br />
 
     <a asp-controller="Product" asp-action="Index" class="btn btn-primary">

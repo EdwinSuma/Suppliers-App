@@ -3,27 +3,30 @@
 <h3>Create a new Product</h3>
 
 <a asp-controller="Product" asp-action="Index" class="btn btn-primary">
+    <i class="fas fa-arrow-left"></i>
     Back
 </a>
 
 <form asp-controller="Product" asp-action="Add" method="post">
+    <div asp-validation-summary="All"></div>
+
     <label asp-for="Name">Product Name</label>
     <input type="text" asp-for="Name" class="form-control" />
+    <span asp-validation-for="Name" class="text-danger"></span>
     <br />
     <label asp-for="Description">Product Description</label>
     <input type="text" asp-for="Description" class="form-control" />
-    <br />
-    <label asp-for="Qty">Quantity</label>
-    <input type="text" asp-for="Qty" class="form-control" />
+    <span asp-validation-for="Description" class="text-danger"></span>
     <br />
     <label asp-for="Unit">Unit</label>
     <input type="number" asp-for="Unit" class="form-control" />
+    <span asp-validation-for="Unit" class="text-danger"></span>
     <br />
 
-    <a asp-controller="Product" asp-action="Index" class="btn btn-primary">
-        Back
-    </a>
+    
     <input type="submit" value="Add Product" class="btn btn-success" />
+    <i class="fas fa-check" style="color: #63E6BE;"></i>
+    
 
 </form>
 
