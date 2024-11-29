@@ -19,6 +19,15 @@ namespace Inventory.DataModel
             modelBuilder.Entity<PurchaseOrderHeader>().ToTable("PurchaseOrderHeadersINV");
             modelBuilder.Entity<PurchaseOrderDetail>().ToTable("PurchaseOrderDetailsINV");
 
+            // Configure Precision for Decimal Columns
+            modelBuilder.Entity<PurchaseOrderDetail>()
+                .Property(p => p.Price)
+                .HasPrecision(18, 2); // Matches "Price" precision in the schema
+
+            modelBuilder.Entity<PurchaseOrderDetail>()
+                .Property(p => p.Amount)
+                .HasPrecision(18, 2); // Matches "Amount" precision in the schema
+
             // Product Date Precision
             modelBuilder.Entity<Product>()
                 .Property(p => p.DateAdded)
@@ -40,18 +49,18 @@ namespace Inventory.DataModel
                 .HasForeignKey(p => p.SupplierId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Relationships for PurchaseOrderDetail
+            // Relationships
             modelBuilder.Entity<PurchaseOrderDetail>()
                 .HasOne(d => d.Product)
                 .WithMany(p => p.PurchaseOrderDetails)
                 .HasForeignKey(d => d.ProductId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Restrict); // Prevent cascading delete
 
             modelBuilder.Entity<PurchaseOrderDetail>()
                 .HasOne(d => d.PurchaseOrderHeader)
                 .WithMany(h => h.PurchaseOrderDetails)
                 .HasForeignKey(d => d.PurchaseOrderHeaderId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Restrict); // Prevent cascading delete
         }
 
         public DbSet<Supplier> Suppliers { get; set; }

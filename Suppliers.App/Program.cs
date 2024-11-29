@@ -14,7 +14,7 @@ namespace Suppliers.App
 
             builder.Services.AddDbContext<AppDbContext>(opts =>
             {
-                opts.UseSqlServer(builder.Configuration.GetConnectionString("Submission"));
+                opts.UseSqlServer(builder.Configuration.GetConnectionString("Personal"));
             });
 
             // Add Identity services

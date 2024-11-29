@@ -13,29 +13,32 @@ public class PurchaseOrderRepo : IPurchaseOrderRepo
     public List<PurchaseOrderHeader> GetAllHeaders()
     {
         return _context.PurchaseOrderHeaders
-            .Include(po => po.Supplier)
-            .Include(po => po.PurchaseOrderDetails)
+            .Include(h => h.Supplier)
+            .Include(h => h.PurchaseOrderDetails) // Include details for total calculation
             .ToList();
     }
+    public decimal GetTotalAmount(int purchaseOrderHeaderId)
+    {
+        return _context.PurchaseOrderDetails
+            .Where(d => d.PurchaseOrderHeaderId == purchaseOrderHeaderId)
+            .Sum(d => d.Amount);
+    }
+
+
 
     public void AddPurchaseOrder(PurchaseOrderHeader header, List<PurchaseOrderDetail> details)
     {
-        // Set the Date property if it's required and not nullable
-        header.DateAdded = DateTime.Now;
-
-        // Add the header
-        _context.PurchaseOrderHeaders.Add(header);
-
-        // Add the details
         foreach (var detail in details)
         {
-            detail.PurchaseOrderHeaderId = header.Id;
-            _context.PurchaseOrderDetails.Add(detail);
+            detail.Amount = detail.Qty * detail.Price; // Calculate Amount
         }
 
-        // Save changes to the database
-        _context.SaveChanges();
+        _context.PurchaseOrderHeaders.Add(header);
+        _context.PurchaseOrderDetails.AddRange(details);
+        _context.SaveChanges(); // Save changes to the database
     }
+
+
 
 
 
@@ -55,7 +58,7 @@ public class PurchaseOrderRepo : IPurchaseOrderRepo
             var product = _context.Products.FirstOrDefault(p => p.ProductID == detail.ProductId);
             if (product != null)
             {
-                product.Qty += detail.Quantity;
+                product.Qty += detail.Qty;
             }
         }
 
