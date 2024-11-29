@@ -19,7 +19,8 @@
     <span asp-validation-for="Description" class="text-danger"></span>
     <br />
     <label asp-for="Unit">Unit</label>
-    <input type="number" asp-for="Unit" class="form-control" />
+    <!-- Changed input type to text to accept non-numeric values -->
+    <input type="text" asp-for="Unit" class="form-control" />
     <span asp-validation-for="Unit" class="text-danger"></span>
     <br />
 

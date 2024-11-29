@@ -1,0 +1,39 @@
+﻿@model IEnumerable<PurchaseOrderHeader>
+
+<h2>Purchase Orders</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Supplier</th>
+            <th>Status</th>
+            <th>Date Added</th>
+            <th>Date Finalized</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var order in Model)
+        {
+            <tr>
+                <td>@order.Id</td>
+                <td>@order.Supplier.CompanyName</td>
+                <td>@order.Status</td>
+                <td>@order.DateAdded.ToString("g")</td>
+                <td>@order.DateFinalized?.ToString("g")</td>
+                <td>
+                    @if (order.Status == "Pending Delivery")
+                    {
+                        <a asp-action="MarkAsDelivered" asp-route-id="@order.Id" class="btn btn-success">Mark as Delivered</a>
+                        <a asp-action="Void" asp-route-id="@order.Id" class="btn btn-danger">Void</a>
+                    }
+                    else
+                    {
+                        <span class="text-muted">No Actions Available</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<a asp-action="Create" class="btn btn-primary">Create New Purchase Order</a>

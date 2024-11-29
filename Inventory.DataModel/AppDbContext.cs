@@ -1,12 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.Identity.Client;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Inventory.DataModel
 {
@@ -14,22 +7,19 @@ namespace Inventory.DataModel
     {
         public AppDbContext(DbContextOptions options) : base(options)
         {
-            
         }
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    optionsBuilder.UseSqlServer("Server=DESKTOP-EDG1IN1\\SQLEXPRESS;Database=eisensy_csbentprog;User Id=eisensy_student;Password=Benilde@2020;");
-        //}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
+            // Table Mappings
             modelBuilder.Entity<Supplier>().ToTable("SuppliersINV");
             modelBuilder.Entity<Product>().ToTable("ProductsINV");
             modelBuilder.Entity<PurchaseOrderHeader>().ToTable("PurchaseOrderHeadersINV");
             modelBuilder.Entity<PurchaseOrderDetail>().ToTable("PurchaseOrderDetailsINV");
 
+            // Product Date Precision
             modelBuilder.Entity<Product>()
                 .Property(p => p.DateAdded)
                 .HasColumnType("datetime2(7)");
@@ -38,22 +28,29 @@ namespace Inventory.DataModel
                 .Property(p => p.DateModified)
                 .HasColumnType("datetime2(7)");
 
+            // PurchaseOrderDetail Price Precision
+            modelBuilder.Entity<PurchaseOrderDetail>()
+                .Property(p => p.Price)
+                .HasPrecision(18, 2);
+
+            // Relationships for PurchaseOrderHeader
             modelBuilder.Entity<PurchaseOrderHeader>()
                 .HasOne(p => p.Supplier)
-                .WithMany(p => p.PurchaseOrderHeaders)
+                .WithMany(s => s.PurchaseOrderHeaders)
                 .HasForeignKey(p => p.SupplierId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            // Relationships for PurchaseOrderDetail
             modelBuilder.Entity<PurchaseOrderDetail>()
-                .HasOne(p => p.Product)
+                .HasOne(d => d.Product)
                 .WithMany(p => p.PurchaseOrderDetails)
-                .HasForeignKey(p => p.ProductId)
+                .HasForeignKey(d => d.ProductId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<PurchaseOrderDetail>()
-                .HasOne(p => p.PurchaseOrderHeader)
-                .WithMany(p => p.PurchaseOrderDetails)
-                .HasForeignKey(p => p.PurchaseOrderHeaderId)
+                .HasOne(d => d.PurchaseOrderHeader)
+                .WithMany(h => h.PurchaseOrderDetails)
+                .HasForeignKey(d => d.PurchaseOrderHeaderId)
                 .OnDelete(DeleteBehavior.Restrict);
         }
 
@@ -61,5 +58,6 @@ namespace Inventory.DataModel
         public DbSet<Product> Products { get; set; }
         public DbSet<PurchaseOrderHeader> PurchaseOrderHeaders { get; set; }
         public DbSet<PurchaseOrderDetail> PurchaseOrderDetails { get; set; }
+
     }
 }

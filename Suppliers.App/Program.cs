@@ -14,7 +14,7 @@ namespace Suppliers.App
 
             builder.Services.AddDbContext<AppDbContext>(opts =>
             {
-                opts.UseSqlServer(builder.Configuration.GetConnectionString("Personal"));
+                opts.UseSqlServer(builder.Configuration.GetConnectionString("Submission"));
             });
 
             // Add Identity services
@@ -41,6 +41,10 @@ namespace Suppliers.App
 
             builder.Services.AddScoped<IProductRepo, ProductRepo>();
 
+            builder.Services.AddScoped<IPurchaseOrderRepo, PurchaseOrderRepo>();
+
+            builder.Services.AddSession();
+
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
@@ -61,6 +65,7 @@ namespace Suppliers.App
 
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseSession();
 
             app.MapControllerRoute(
                 name: "default",

@@ -1,0 +1,62 @@
+﻿@model PurchaseOrderHeaderVM
+
+<h2>Create Purchase Order</h2>
+<form asp-action="Create" method="post">
+    <div class="mb-3">
+        <label asp-for="SupplierId" class="form-label">Supplier</label>
+        <select asp-for="SupplierId" asp-items="Model.Suppliers" class="form-select"></select>
+        <span asp-validation-for="SupplierId" class="text-danger"></span>
+    </div>
+
+    <h4>Products</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Unit</th>
+                <th>Price</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="productTableBody">
+            @Html.Partial("_PurchaseOrderDetailRow", new PurchaseOrderDetailVM { Products = Model.Products })
+        </tbody>
+    </table>
+    <button type="button" id="addProductRow" class="btn btn-secondary">Add Product</button>
+
+    <div class="mt-4">
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function () {
+            // Populate Unit when a product is selected
+            $('#productTableBody').on('change', '.product-select', function () {
+                // Get the selected option
+                const selectedOption = $(this).find('option:selected');
+                const unit = selectedOption.data('unit'); // Retrieve Unit from the data-unit attribute
+
+                // Set the Unit field in the current row
+                $(this).closest('tr').find('.unit-field').val(unit);
+            });
+
+            // Add a new product row dynamically
+            $('#addProductRow').click(function () {
+                // Load the partial view via AJAX
+                $.get('@Url.Action("RenderPartialView", "PurchaseOrder")', function (data) {
+                    $('#productTableBody').append(data);
+                });
+            });
+
+            // Remove a product row
+            $('#productTableBody').on('click', '.remove-row', function () {
+                $(this).closest('tr').remove();
+            });
+        });
+    </script>
+}
